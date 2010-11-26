@@ -11,8 +11,8 @@ module Warsow
 
 module_function
 
-  def connect host, port = 44400
-    Server.new(host, port).tap do |this|
+  def connect host, port = 44400, opts = {}
+    Server.new(host, port, opts).tap do |this|
       this.connect
 
       yield this if block_given?

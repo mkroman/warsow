@@ -4,6 +4,8 @@
 $:.unshift File.dirname(__FILE__) + '/../library'
 require 'warsow'
 
-Warsow.connect 'tastyspleen.tv' do |server|
+Warsow.connect 'maero.dk', 44400, rcon: 'lol1234' do |server|
   puts "Hostname: #{server.hostname}"
+
+  server.rcon 'sv_hostname "nigger saedd"'
 end

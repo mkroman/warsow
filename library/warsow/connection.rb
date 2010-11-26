@@ -2,6 +2,8 @@
 
 module Warsow
   class Connection
+    Header = [0xFF, 0xFF, 0xFF, 0xFF].pack 'C*'
+
     def initialize host, port
       @host, @port = host, port
       @socket = UDPSocket.new
@@ -16,7 +18,7 @@ module Warsow
     end
 
     def transmit data
-      @socket.send data, 0
+      @socket.send Header + data, 0
     end
   end
 end

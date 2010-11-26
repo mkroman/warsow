@@ -2,7 +2,7 @@
 
 module Warsow
   class Server
-    attr_accessor :attributes
+    attr_accessor :attributes, :rcon_password
 
     def self.attr name, value; define_method(name) { @attributes["#{value}"] } end
 
@@ -12,8 +12,8 @@ module Warsow
     attr :hostname,    :sv_hostname
     attr :max_players, :sv_maxclients
 
-    def initialize host, port = 44400
-      @host, @port = host, port
+    def initialize host, port = 44400, opts = {}
+      @host, @port, @options = host, port, opts
 
       @connection = Connection.new host, port
     end
@@ -23,10 +23,15 @@ module Warsow
       @attributes = retrieve_attributes
     end
 
+    def rcon command
+      @connection.transmit "rcon #{@options[:rcon]} #{command}"
+      @connection.read
+    end
+
   private
 
     def retrieve_attributes
-      @connection.transmit "\xFF\xFF\xFF\xFFgetinfo \x0A\x0D\x0F"
+      @connection.transmit "getinfo \x0A\x0D\x0F"
       @connection.read[18..-1].tap do |response|
         return Hash[*response.split('\\')]
       end
